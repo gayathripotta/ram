@@ -1,0 +1,31 @@
+.footer {
+    background-color: #f1f1f1;
+    padding: 20px;
+    text-align: center;
+}
+
+.app-links,
+.footer-links {
+    margin: 10px 0;
+}
+
+h2 {
+    color: black;
+}
+
+.app-links a,
+.footer-links a {
+    margin: 0 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+.app-links a:hover,
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+.copyright {
+    margin: 10px 0;
+    color: #666;
+}
