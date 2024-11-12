@@ -1,58 +1,41 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link
-import './SignUpPage.css';
+import { useNavigate } from 'react-router-dom';
+import './SignupPage.css';
 
-const SignUpPage = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
-  const [errors, setErrors] = useState([]);
+const SignupPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({ ...prevState, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSignup = (e) => {
     e.preventDefault();
-    const newErrors = [];
+    setErrorMessage('');
 
-    // Basic form validation
-    Object.entries(formData).forEach(([key, value]) => {
-      if (!value) newErrors.push(key);
-    });
-
-    if (newErrors.length === 0) {
-      console.log('Form submitted:', formData);
-      navigate("/login"); // Redirect to login after successful signup
-    } else {
-      setErrors(newErrors);
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match.");
+      return;
     }
+
+    // Store user data in local storage
+    localStorage.setItem('user', JSON.stringify({ email, password }));
+    navigate("/login");
   };
 
   return (
     <div className="login-signup-page">
       <div className="form-container">
         <h1>Sign Up</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label>Name</label>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        <form onSubmit={handleSignup}>
           <div className="input-group">
             <label>Email</label>
             <input
               type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
@@ -60,28 +43,27 @@ const SignUpPage = () => {
             <label>Password</label>
             <input
               type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              placeholder="Confirm your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
           </div>
           <button type="submit" className="btn">Sign Up</button>
-          {errors.length > 0 && (
-            <div className="error-message">
-              Please fill in the following fields:
-              <ul>
-                {errors.map((error, index) => <li key={index}>{error}</li>)}
-              </ul>
-            </div>
-          )}
         </form>
-        {/* Replace anchor tag with Link */}
-        <p>Already have an account? <Link to="/login">Login here</Link></p>
       </div>
     </div>
   );
 };
 
-export default SignUpPage;
+export default SignupPage;
